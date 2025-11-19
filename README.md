@@ -65,7 +65,7 @@ unzip brain-tumor-classification-mri.zip -d dataset/
 python -m app.explore_data
 ```
 
-6. **Entrainer le modele** (30-60 minutes)
+6. **Entrainer le modele** (40-90 minutes)
 
 ```bash
 python -m app.model
