@@ -1,29 +1,14 @@
-# Dependances pour l'application de classification de tumeurs cerebrales
-# TODO: Completez avec les versions appropriees
-
-# Framework web
-# flask==...
-
-# Deep Learning
-# tensorflow==...
-# keras==...
-
-# Traitement d'images
-# opencv-python==...
-# Pillow==...
-
-# Data science
-# numpy==...
-# pandas==...
-# matplotlib==...
-# seaborn==...
-
-# Serveur WSGI pour production
-# gunicorn==...
-
-# Kaggle API (pour telecharger le dataset)
-# kaggle==...
-
-# Optionnel : pour les tests
-# pytest==...
-# requests==...
+numpy>=1.23
+pandas>=2.0
+matplotlib>=3.7
+scikit-learn>=1.3
+tensorflow-cpu>=2.10,<3.0
+Pillow>=10.0
+opencv-python-headless>=4.8
+Flask>=2.3
+gunicorn>=21.0
+werkzeug>=2.3
+python-dotenv>=1.0
+requests>=2.31
+seaborn>=0.12
+kaggle>=1.6

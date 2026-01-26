@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Classification Tumeurs Cérébrales</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Classification de Tumeurs Cérébrales (IRM)</h1>
+
+    <p class="warning">
+        ⚠️ Outil d’aide au diagnostic — ne remplace pas un avis médical.
+    </p>
+
+    <form id="uploadForm">
+        <input type="file" id="fileInput" accept="image/*" required>
+        <button type="submit">Analyser l'image</button>
+    </form>
+
+    <div id="preview"></div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+const form = document.getElementById("uploadForm");
+const resultDiv = document.getElementById("result");
+const previewDiv = document.getElementById("preview");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    resultDiv.innerHTML = "Analyse en cours...";
+
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) return;
+
+    // preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        previewDiv.innerHTML = `<img src="${e.target.result}" class="preview-img">`;
+    };
+    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await fetch("/predict", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+        resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+        return;
+    }
+
+    resultDiv.innerHTML = `
+        <h2>Résultat</h2>
+        <p><strong>Classe prédite :</strong> ${data.class_name}</p>
+        <p><strong>Confiance :</strong> ${(data.confidence * 100).toFixed(2)}%</p>
+        <p>${data.description}</p>
+        <p class="warning">${data.warning}</p>
+    `;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+# ------------------------------------------------------------
+# 1. Image Python officielle légère
+# ------------------------------------------------------------
+FROM python:3.10-slim
+
+# Désactive les buffers Python
+ENV PYTHONUNBUFFERED=1
+
+# Fix pour éviter problèmes TensorFlow AVX
+ENV TF_ENABLE_ONEDNN_OPTS=0
+
+# Répertoires
+WORKDIR /app
+
+# ------------------------------------------------------------
+# 2. Installation Debian essentials + TensorFlow deps
+# ------------------------------------------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libglib2.0-0 libsm6 libxrender1 libxext6 \
+    && rm -rf /var/lib/apt/lists/*
+
+# ------------------------------------------------------------
+# 3. Copier requirements et installer dépendances
+# ------------------------------------------------------------
+COPY requirements.txt .
+
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install -r requirements.txt
+
+# ------------------------------------------------------------
+# 4. Copier le code de l’application
+# ------------------------------------------------------------
+COPY app/ app/
+COPY templates/ templates/
+COPY static/ static/
+COPY models/ models/
+COPY app.py .
+
+# ------------------------------------------------------------
+# 5. Exposer le port pour Azure
+# ------------------------------------------------------------
+EXPOSE 8000
+
+# ------------------------------------------------------------
+# 6. Lancement avec Gunicorn (production)
+# ------------------------------------------------------------
+# Timeout augmenté à 600s car TensorFlow peut être lent au premier load
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:8000", "--timeout", "600"]
