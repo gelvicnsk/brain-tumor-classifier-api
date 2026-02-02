@@ -14,6 +14,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 MAX_FILE_SIZE = 16 * 1024 * 1024  # 16MB
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
+CORS(app)  # 🔓 autorise les requêtes depuis GitHub Pages
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
@@ -44,7 +46,7 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # 🔑 même clé que le frontend
+        # même clé que le frontend
         if 'file' not in request.files:
             return jsonify({"error": "Aucun fichier fourni"}), 400
 
