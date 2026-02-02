@@ -1,36 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Tumor Classifier - Classification IRM</title>
-    <style>
-       /* TODO: Ajouter du CSS */
-    </style>
+<meta charset="UTF-8">
+<title>Brain Tumor Classifier - Flask Interface</title>
+<style>
+body { font-family: Arial; background:#f4f6fb; }
+.container {
+    max-width: 600px;
+    margin: auto;
+    margin-top: 40px;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+button {
+    background: #4a148c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.result {
+    margin-top: 15px;
+    background:#ede7f6;
+    padding:10px;
+    border-radius:5px;
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Classification de Tumeurs Cerebrales</h1>
-        <p style="text-align: center; color: #666;">Systeme d'aide au diagnostic par IRM</p>
-        
-        <div class="upload-section">
-            <form id="uploadForm" enctype="multipart/form-data">
-                <input type="file" id="imageInput" accept="image/*" required>
-                <button type="submit">Analyser l'IRM</button>
-            </form>
-            
-            <div id="preview"></div>
-        </div>
-        
-        <div class="info">
-            <h3>Classes detectees:</h3>
-            <ul>
-                <li><strong>Gliome:</strong> Tumeur gliale</li>
-                <li><strong>Meningiome:</strong> Tumeur des meninges</li>
-                <li><strong>Tumeur pituitaire:</strong> Tumeur de la glande pituitaire</li>
-                <li><strong>Pas de tumeur:</strong> IRM normale</li>
-            </ul>
-        </div>
+<div class="container">
+    <h2>🧠 Brain Tumor Classifier</h2>
+    <p>Interface interne Flask</p>
+
+    <form method="POST" action="/predict" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <br><br>
+        <button type="submit">Analyser</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <p><b>Classe :</b> {{ result.class_name }}</p>
+        <p><b>Confiance :</b> {{ (result.confidence * 100) | round(2) }}%</p>
     </div>
+    {% endif %}
+</div>
 </body>
 </html>
+
