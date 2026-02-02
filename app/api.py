@@ -3,6 +3,7 @@ API Flask pour la classification de tumeurs cérébrales
 """
 from flask import Flask, request, jsonify, render_template
 import os
+from flask_cors import CORS
 
 from app.model import BrainTumorClassifier
 from app.utils import preprocess_image_from_upload, get_class_description
