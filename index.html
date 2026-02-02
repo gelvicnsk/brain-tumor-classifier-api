@@ -19,14 +19,8 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
-h1 {
-    text-align: center;
-    color: #4a148c;
-}
-.upload-section {
-    text-align: center;
-    margin-top: 20px;
-}
+h1 { text-align: center; color: #4a148c; }
+.upload-section { text-align: center; margin-top: 20px; }
 button {
     background: #4a148c;
     color: white;
@@ -34,15 +28,8 @@ button {
     padding: 10px 25px;
     cursor: pointer;
     border-radius: 6px;
-    margin-top: 10px;
 }
-button:hover {
-    background: #6a1b9a;
-}
-#preview img {
-    max-width: 220px;
-    margin-top: 15px;
-}
+#preview img { max-width: 220px; margin-top: 15px; }
 .result {
     margin-top: 20px;
     padding: 15px;
@@ -50,61 +37,37 @@ button:hover {
     background: #ede7f6;
     text-align: center;
 }
-footer {
-    text-align: center;
-    margin-top: 30px;
-    color: #555;
-}
+footer { text-align: center; margin-top: 30px; color: #555; }
 </style>
 </head>
 
 <body>
 <div class="container">
     <h1>🧠 Brain Tumor Classifier</h1>
-    <p style="text-align:center;">
-        Système d’aide au diagnostic par IRM basé sur Deep Learning
-    </p>
+    <p style="text-align:center;">Système d’aide au diagnostic par IRM</p>
 
     <div class="upload-section">
         <form id="uploadForm">
             <input type="file" id="imageInput" accept="image/*" required>
-            <br>
+            <br><br>
             <button type="submit">Analyser l’IRM</button>
         </form>
-
         <div id="preview"></div>
         <div id="result"></div>
     </div>
 
-    <hr>
-
     <h3>Classes détectées :</h3>
     <ul>
-        <li><b>Glioma</b></li>
-        <li><b>Meningioma</b></li>
-        <li><b>Pituitary</b></li>
-        <li><b>No Tumor</b></li>
+        <li>Glioma</li>
+        <li>Meningioma</li>
+        <li>Pituitary</li>
+        <li>No Tumor</li>
     </ul>
 
-    <p>
-        🔗 API :
-        <a href="https://brain-tumor-classifier-api.onrender.com" target="_blank">
-            brain-tumor-classifier-api.onrender.com
-        </a>
-    </p>
-
-    <p>
-        💻 Code :
-        <a href="https://github.com/gelvicnsk/brain-tumor-classifier-api" target="_blank">
-            GitHub Repository
-        </a>
-    </p>
+    <p>API : https://brain-tumor-classifier-api.onrender.com</p>
 
     <footer>
-        <p>
-            © Gelvic NSEMI — Data Engineer | Big Data • IA  
-            Kafka • Spark • Flink • Kubernetes • Airflow • Azure • Talend
-        </p>
+        <p>© Gelvic NSEMI — Data Engineer | Big Data • IA</p>
     </footer>
 </div>
 
@@ -127,24 +90,20 @@ form.addEventListener("submit", async (e) => {
     const formData = new FormData();
     formData.append("file", document.getElementById("imageInput").files[0]);
 
-    try {
-        const response = await fetch("https://brain-tumor-classifier-api.onrender.com/predict", {
-            method: "POST",
-            body: formData
-        });
+    const response = await fetch("https://brain-tumor-classifier-api.onrender.com/predict", {
+        method: "POST",
+        body: formData
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        resultDiv.innerHTML = `
-            <div class="result">
-                <h3>Résultat :</h3>
-                <p><b>${data.class_name}</b></p>
-                <p>Confiance : ${(data.confidence * 100).toFixed(2)}%</p>
-            </div>
-        `;
-    } catch (err) {
-        resultDiv.innerHTML = "<p style='color:red;'>Erreur de connexion à l’API.</p>";
-    }
+    resultDiv.innerHTML = `
+        <div class="result">
+            <h3>Résultat :</h3>
+            <p><b>${data.class_name}</b></p>
+            <p>Confiance : ${(data.confidence * 100).toFixed(2)}%</p>
+        </div>
+    `;
 });
 </script>
 </body>
