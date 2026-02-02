@@ -22,18 +22,18 @@ app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ------------- CHARGER MODELE ------------
+
 classifier = BrainTumorClassifier()
-model_path = 'models/brain_tumor_classifier.h5'
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
+model_path = os.path.join(PROJECT_ROOT, "models", "brain_tumor_classifier.h5")
 
 try:
     classifier.load_model(model_path)
     print("[OK] Modèle chargé")
 except Exception as e:
     print("[ERREUR] Impossible de charger le modèle :", e)
-
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # ---------------- ROUTES -----------------
