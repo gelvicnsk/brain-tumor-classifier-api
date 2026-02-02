@@ -22,6 +22,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ------------- CHARGER MODELE ------------
 
+print("### API FILE LOADED FROM:", __file__)
+
 classifier = BrainTumorClassifier()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
