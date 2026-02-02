@@ -14,11 +14,10 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 MAX_FILE_SIZE = 16 * 1024 * 1024  # 16MB
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
-CORS(app)  # 🔓 autorise les requêtes depuis GitHub Pages
+CORS(app)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
-
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ------------- CHARGER MODELE ------------
@@ -29,11 +28,20 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
 model_path = os.path.join(PROJECT_ROOT, "models", "brain_tumor_classifier.h5")
 
+print("🔍 BASE_DIR:", BASE_DIR)
+print("🔍 PROJECT_ROOT:", PROJECT_ROOT)
+print("🔍 model_path:", model_path)
+print("🔍 exists:", os.path.exists(model_path))
+
 try:
     classifier.load_model(model_path)
     print("[OK] Modèle chargé")
 except Exception as e:
     print("[ERREUR] Impossible de charger le modèle :", e)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # ---------------- ROUTES -----------------
@@ -46,7 +54,6 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # même clé que le frontend
         if 'file' not in request.files:
             return jsonify({"error": "Aucun fichier fourni"}), 400
 
@@ -61,7 +68,6 @@ def predict():
         img_array = preprocess_image_from_upload(file)
         result = classifier.predict(img_array)
 
-        # Description médicale
         result["description"] = get_class_description(result["class_name"])
         result["warning"] = (
             "⚠️ Ceci est un outil pédagogique d'aide au diagnostic. "
